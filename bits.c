@@ -328,7 +328,7 @@ int isBetweenEitherOrder(int x, int a, int b) {
   int xLeA = (signAX & (x >> 31)) | (!signAX & ((~ax >> 31) | !ax));
   int bLeX = (signBX & (b >> 31)) | (!signBX & ((bx >> 31) | !bx));
   int xLeB = (signBX & (x >> 31)) | (!signBX & ((~bx >> 31) | !bx));
-  return !!((aLeX & xLeB) | (bLeX & xLeA));
+  return ((aLeX & xLeB) | (bLeX & xLeA)) & 1;
 }
 
 // P13
@@ -348,7 +348,7 @@ int mul5Sat(int x) {
   int addOverflow = !!(!((x ^ times4) >> 31) & ((x ^ result) >> 31));
   int overflow = shiftOverflow | addOverflow;
   int sign = x >> 31;
-  int saturation = sign ^ 0x7fffffff;
+  int saturation = sign ^ ~(1 << 31);
   int mask = ~overflow + 1;
   return (result & ~mask) | (saturation & mask);
 }
